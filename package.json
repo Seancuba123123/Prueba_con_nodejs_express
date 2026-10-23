@@ -1,0 +1,19 @@
+{
+  "name": "api-rest-con-nodejs-express",
+  "version": "1.0.0",
+  "description": "Practice to nodeJs and Express",
+  "license": "ISC",
+  "author": "Sean Cuba Davila",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
