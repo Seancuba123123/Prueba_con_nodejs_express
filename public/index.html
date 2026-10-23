@@ -2,395 +2,540 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StudentApp | Gestión de estudiantes</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentApp | Gestión de estudiantes</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-slate-100 text-slate-800 min-h-screen">
+<body class="min-h-screen bg-slate-100 text-slate-800">
 
-  <div class="min-h-screen md:flex">
+    <header class="bg-indigo-700 text-white shadow-lg">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+            <div>
+                <h1 class="text-2xl font-bold">StudentApp</h1>
+                <p class="text-sm text-indigo-200">
+                    Sistema de gestión de estudiantes
+                </p>
+            </div>
 
-    <!-- Sidebar -->
-    <aside class="bg-slate-900 text-white p-6 md:w-64 md:min-h-screen">
-      <h1 class="text-2xl font-bold mb-8">🎓 StudentApp</h1>
+            <span id="connectionStatus"
+                class="rounded-full bg-indigo-600 px-4 py-2 text-sm">
+                Conectando...
+            </span>
+        </div>
+    </header>
 
-      <nav class="space-y-3">
-        <a href="#inicio"
-           class="block rounded-lg bg-blue-600 px-4 py-3">
-          🏠 Inicio
-        </a>
-        <a href="#estudiantes"
-           class="block rounded-lg px-4 py-3 hover:bg-slate-800">
-          👥 Estudiantes
-        </a>
-      </nav>
+    <main class="mx-auto max-w-7xl space-y-8 px-6 py-8">
 
-      <p class="mt-10 text-sm text-slate-400">
-        API REST · Node.js + Express
-      </p>
-    </aside>
+        <!-- Estadísticas -->
+        <section class="grid gap-4 sm:grid-cols-2">
+            <article class="rounded-2xl bg-white p-6 shadow-sm">
+                <p class="text-sm text-slate-500">Total de estudiantes</p>
+                <h2 id="totalStudents" class="mt-2 text-3xl font-bold text-indigo-700">
+                    0
+                </h2>
+            </article>
 
-    <!-- Contenido principal -->
-    <main id="inicio" class="flex-1 p-5 md:p-8">
+            <article class="rounded-2xl bg-white p-6 shadow-sm">
+                <p class="text-sm text-slate-500">Estado del sistema</p>
+                <h2 class="mt-2 text-2xl font-bold text-emerald-600">
+                    StudentApp
+                </h2>
+            </article>
+        </section>
 
-      <header class="mb-8 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 class="text-3xl font-bold">Gestión de estudiantes</h2>
-          <p class="mt-2 text-slate-500">
-            Administra los estudiantes de tu institución.
-          </p>
+        <!-- Notificaciones -->
+        <div id="notification"
+            class="hidden rounded-xl border p-4 text-sm"
+            role="status"
+            aria-live="polite">
         </div>
 
-        <span id="status"
-              class="rounded-full bg-slate-200 px-4 py-2 text-sm">
-          Conectando...
-        </span>
-      </header>
+        <div class="grid items-start gap-8 lg:grid-cols-3">
 
-      <!-- Estadísticas -->
-      <section class="mb-6 grid gap-4 sm:grid-cols-2">
-        <div class="rounded-2xl bg-white p-6 shadow-sm">
-          <p class="text-sm text-slate-500">Total de estudiantes</p>
-          <p id="total" class="mt-2 text-3xl font-bold text-blue-600">0</p>
+            <!-- Formulario -->
+            <section class="rounded-2xl bg-white p-6 shadow-sm">
+                <h2 id="formTitle" class="text-xl font-bold">
+                    Registrar estudiante
+                </h2>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Completa los datos del estudiante.
+                </p>
+
+                <form id="studentForm" class="mt-6 space-y-4">
+
+                    <div>
+                        <label for="name"
+                            class="mb-1 block text-sm font-medium">
+                            Nombre completo
+                        </label>
+                        <input id="name" name="name" type="text"
+                            maxlength="100" required
+                            placeholder="Ej. Juan Pérez"
+                            class="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
+                    </div>
+
+                    <div>
+                        <label for="age"
+                            class="mb-1 block text-sm font-medium">
+                            Edad
+                        </label>
+                        <input id="age" name="age" type="number"
+                            min="1" max="120" step="1" required
+                            placeholder="Ej. 20"
+                            class="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
+                    </div>
+
+                    <div>
+                        <label for="course"
+                            class="mb-1 block text-sm font-medium">
+                            Carrera o curso
+                        </label>
+                        <input id="course" name="course" type="text"
+                            maxlength="100" required
+                            placeholder="Ej. Ingeniería de Software"
+                            class="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100">
+                    </div>
+
+                    <div>
+                        <label for="sex"
+                            class="mb-1 block text-sm font-medium">
+                            Sexo
+                        </label>
+                        <select id="sex" name="sex" required
+                            class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-indigo-500">
+                            <option value="">Selecciona una opción</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Otro">Otro</option>
+                            <option value="Prefiero no decirlo">
+                                Prefiero no decirlo
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="language"
+                            class="mb-1 block text-sm font-medium">
+                            Lenguaje de programación favorito
+                        </label>
+                        <select id="language" name="language" required
+                            class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-indigo-500">
+                            <option value="">Selecciona un lenguaje</option>
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="Python">Python</option>
+                            <option value="Java">Java</option>
+                            <option value="C++">C++</option>
+                            <option value="C#">C#</option>
+                            <option value="PHP">PHP</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col gap-3 pt-2">
+                        <button id="submitButton" type="submit"
+                            class="w-full rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50">
+                            Registrar estudiante
+                        </button>
+
+                        <button id="cancelButton" type="button"
+                            class="hidden w-full rounded-lg bg-slate-200 px-4 py-3 font-semibold text-slate-700 hover:bg-slate-300">
+                            Cancelar edición
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Tabla -->
+            <section class="rounded-2xl bg-white p-6 shadow-sm lg:col-span-2">
+                <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                    <div>
+                        <h2 class="text-xl font-bold">Lista de estudiantes</h2>
+                        <p class="mt-1 text-sm text-slate-500">
+                            Administra los registros del sistema.
+                        </p>
+                    </div>
+
+                    <button id="refreshButton" type="button"
+                        class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium hover:bg-slate-50">
+                        ↻ Actualizar
+                    </button>
+                </div>
+
+                <div class="mt-5">
+                    <input id="searchInput" type="search"
+                        placeholder="Buscar por nombre, curso o lenguaje..."
+                        class="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-indigo-500">
+                </div>
+
+                <div class="mt-5 overflow-x-auto">
+                    <table class="w-full min-w-[650px] text-left text-sm">
+                        <thead class="bg-slate-50 text-slate-500">
+                            <tr>
+                                <th class="px-4 py-3">Estudiante</th>
+                                <th class="px-4 py-3">Edad</th>
+                                <th class="px-4 py-3">Curso</th>
+                                <th class="px-4 py-3">Lenguaje</th>
+                                <th class="px-4 py-3">Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="studentsTable">
+                            <tr>
+                                <td colspan="5"
+                                    class="px-4 py-10 text-center text-slate-500">
+                                    Cargando estudiantes...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p id="resultsCount"
+                    class="mt-4 text-sm text-slate-500">
+                    0 estudiantes encontrados
+                </p>
+            </section>
         </div>
-
-        <div class="rounded-2xl bg-white p-6 shadow-sm">
-          <p class="text-sm text-slate-500">Estado del sistema</p>
-          <p class="mt-2 text-xl font-bold text-emerald-600">
-            API REST
-          </p>
-          <p class="text-sm text-slate-500">Node.js + Express</p>
-        </div>
-      </section>
-
-      <!-- Formulario -->
-      <section class="mb-6 rounded-2xl bg-white p-6 shadow-sm">
-        <h3 id="formTitle" class="mb-5 text-xl font-bold">
-          ➕ Agregar estudiante
-        </h3>
-
-        <form id="studentForm" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-
-          <div>
-            <label for="name" class="mb-2 block text-sm font-medium">
-              Nombre
-            </label>
-            <input id="name" required maxlength="100"
-                   placeholder="Ej. Juan Pérez"
-                   class="w-full rounded-lg border p-3 outline-none focus:border-blue-500">
-          </div>
-
-          <div>
-            <label for="age" class="mb-2 block text-sm font-medium">
-              Edad
-            </label>
-            <input id="age" type="number" required min="1" max="120"
-                   placeholder="Ej. 20"
-                   class="w-full rounded-lg border p-3 outline-none focus:border-blue-500">
-          </div>
-
-          <div>
-            <label for="course" class="mb-2 block text-sm font-medium">
-              Curso o carrera
-            </label>
-            <input id="course" required maxlength="100"
-                   placeholder="Ingeniería de Software"
-                   class="w-full rounded-lg border p-3 outline-none focus:border-blue-500">
-          </div>
-
-          <div>
-            <label for="sex" class="mb-2 block text-sm font-medium">
-              Sexo
-            </label>
-            <select id="sex" required
-                    class="w-full rounded-lg border bg-white p-3 outline-none focus:border-blue-500">
-              <option value="">Selecciona una opción</option>
-              <option value="Masculino">Masculino</option>
-              <option value="Femenino">Femenino</option>
-              <option value="Otro">Otro</option>
-              <option value="Prefiero no decirlo">Prefiero no decirlo</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="language" class="mb-2 block text-sm font-medium">
-              Lenguaje favorito
-            </label>
-            <input id="language" required maxlength="100"
-                   placeholder="Ej. JavaScript"
-                   class="w-full rounded-lg border p-3 outline-none focus:border-blue-500">
-          </div>
-
-          <div class="flex items-end gap-2">
-            <button id="submitBtn" type="submit"
-                    class="flex-1 rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700">
-              Agregar
-            </button>
-
-            <button id="cancelBtn" type="button"
-                    class="hidden rounded-lg border px-4 py-3 hover:bg-slate-100">
-              Cancelar
-            </button>
-          </div>
-        </form>
-
-        <p id="message" role="status" aria-live="polite"
-           class="mt-4 text-sm"></p>
-      </section>
-
-      <!-- Tabla -->
-      <section id="estudiantes" class="rounded-2xl bg-white p-6 shadow-sm">
-        <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
-          <h3 class="text-xl font-bold">👥 Lista de estudiantes</h3>
-
-          <input id="search" type="search"
-                 placeholder="Buscar por nombre..."
-                 class="rounded-lg border p-3 outline-none focus:border-blue-500">
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 text-slate-600">
-              <tr>
-                <th class="p-3">Nombre</th>
-                <th class="p-3">Edad</th>
-                <th class="p-3">Curso</th>
-                <th class="p-3">Sexo</th>
-                <th class="p-3">Lenguaje</th>
-                <th class="p-3">Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="studentList">
-              <tr>
-                <td colspan="6" class="p-5 text-center text-slate-500">
-                  Cargando estudiantes...
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p id="count" class="mt-4 text-sm text-slate-500"></p>
-      </section>
     </main>
-  </div>
 
-  <script>
-    const API = '/students';
+    <footer class="mt-8 border-t border-slate-200 bg-white px-6 py-5 text-center text-sm text-slate-500">
+        StudentApp · Frontend con Tailwind CSS y API REST con Express
+    </footer>
 
-    const form = document.getElementById('studentForm');
-    const list = document.getElementById('studentList');
-    const message = document.getElementById('message');
-    const search = document.getElementById('search');
-    const status = document.getElementById('status');
+    <script>
+        const API = '/students';
 
-    let students = [];
-    let editingName = null;
+        const form = document.getElementById('studentForm');
+        const table = document.getElementById('studentsTable');
+        const notification = document.getElementById('notification');
+        const searchInput = document.getElementById('searchInput');
+        const submitButton = document.getElementById('submitButton');
+        const cancelButton = document.getElementById('cancelButton');
+        const connectionStatus = document.getElementById('connectionStatus');
 
-    function showMessage(text, error = false) {
-      message.textContent = text;
-      message.className = 'mt-4 text-sm ' +
-        (error ? 'text-red-600' : 'text-emerald-600');
-    }
+        let students = [];
+        let editingName = null;
+        let notificationTimer;
 
-    function getFormData() {
-      return {
-        name: document.getElementById('name').value.trim(),
-        age: Number(document.getElementById('age').value),
-        course: document.getElementById('course').value.trim(),
-        sex: document.getElementById('sex').value,
-        language: document.getElementById('language').value.trim()
-      };
-    }
+        // Peticiones al backend
+        async function request(url, options = {}) {
+            const response = await fetch(url, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                }
+            });
 
-    async function request(url, options = {}) {
-      const response = await fetch(url, {
-        ...options,
-        headers: {
-          ...(options.body ? { 'Content-Type': 'application/json' } : {}),
-          ...options.headers
-        }
-      });
+            const data = await response.json().catch(() => ({}));
 
-      if (!response.ok) {
-        const error = await response.json().catch(() => ({}));
-        throw new Error(error.message || `Error HTTP ${response.status}`);
-      }
+            if (!response.ok) {
+                throw new Error(
+                    data.message || `Error HTTP ${response.status}`
+                );
+            }
 
-      if (response.status === 204) return null;
-      return response.json();
-    }
-
-    async function loadStudents() {
-      try {
-        students = await request(API);
-        status.textContent = '● Servidor conectado';
-        status.className =
-          'rounded-full bg-emerald-100 px-4 py-2 text-sm text-emerald-700';
-        renderStudents();
-      } catch (error) {
-        status.textContent = '● Error de conexión';
-        status.className =
-          'rounded-full bg-red-100 px-4 py-2 text-sm text-red-700';
-        list.innerHTML = `
-          <tr><td colspan="6" class="p-5 text-center text-red-600">
-            No se pudo conectar. Comprueba que el servidor esté activo.
-          </td></tr>`;
-        showMessage(error.message, true);
-      }
-    }
-
-    function renderStudents() {
-      const query = search.value.trim().toLowerCase();
-      const filtered = students.filter(student =>
-        student.name.toLowerCase().includes(query)
-      );
-
-      document.getElementById('total').textContent = students.length;
-      document.getElementById('count').textContent =
-        `Mostrando ${filtered.length} de ${students.length} estudiantes`;
-
-      list.replaceChildren();
-
-      if (filtered.length === 0) {
-        const row = document.createElement('tr');
-        const cell = document.createElement('td');
-        cell.colSpan = 6;
-        cell.className = 'p-6 text-center text-slate-500';
-        cell.textContent = 'No se encontraron estudiantes.';
-        row.appendChild(cell);
-        list.appendChild(row);
-        return;
-      }
-
-      filtered.forEach(student => {
-        const row = document.createElement('tr');
-        row.className = 'border-b hover:bg-slate-50';
-
-        [
-          student.name,
-          student.age,
-          student.course,
-          student.sex,
-          student.language
-        ].forEach(value => {
-          const cell = document.createElement('td');
-          cell.className = 'p-3';
-          cell.textContent = value ?? '';
-          row.appendChild(cell);
-        });
-
-        const actions = document.createElement('td');
-        actions.className = 'p-3';
-
-        const edit = document.createElement('button');
-        edit.textContent = 'Editar';
-        edit.className =
-          'mr-2 mb-1 rounded-lg bg-blue-600 px-3 py-2 text-white hover:bg-blue-700';
-        edit.addEventListener('click', () => editStudent(student));
-
-        const remove = document.createElement('button');
-        remove.textContent = 'Eliminar';
-        remove.className =
-          'mb-1 rounded-lg bg-red-600 px-3 py-2 text-white hover:bg-red-700';
-        remove.addEventListener('click', () => deleteStudent(student));
-
-        actions.append(edit, remove);
-        row.appendChild(actions);
-        list.appendChild(row);
-      });
-    }
-
-    form.addEventListener('submit', async event => {
-      event.preventDefault();
-
-      const data = getFormData();
-
-      if (!data.name || !data.course || !data.sex || !data.language) {
-        showMessage('Completa todos los campos.', true);
-        return;
-      }
-
-      try {
-        if (editingName !== null) {
-          await request(`${API}/${encodeURIComponent(editingName)}`, {
-            method: 'PATCH',
-            body: JSON.stringify({
-              age: data.age,
-              course: data.course,
-              sex: data.sex,
-              language: data.language
-            })
-          });
-
-          showMessage('Estudiante actualizado correctamente.');
-        } else {
-          await request(API, {
-            method: 'POST',
-            body: JSON.stringify(data)
-          });
-
-          showMessage('Estudiante registrado correctamente.');
+            return data;
         }
 
-        resetForm();
-        await loadStudents();
-      } catch (error) {
-        showMessage(error.message, true);
-      }
-    });
+        // Notificaciones
+        function showMessage(message, type = 'success') {
+            clearTimeout(notificationTimer);
 
-    function editStudent(student) {
-      editingName = student.name;
+            const styles = {
+                success: 'border-emerald-200 bg-emerald-50 text-emerald-800',
+                error: 'border-red-200 bg-red-50 text-red-800',
+                info: 'border-blue-200 bg-blue-50 text-blue-800'
+            };
 
-      document.getElementById('name').value = student.name;
-      document.getElementById('name').readOnly = true;
-      document.getElementById('age').value = student.age;
-      document.getElementById('course').value = student.course;
-      document.getElementById('sex').value = student.sex;
-      document.getElementById('language').value = student.language;
+            notification.className =
+                `rounded-xl border p-4 text-sm ${styles[type] || styles.info}`;
 
-      document.getElementById('formTitle').textContent =
-        '✏️ Editar estudiante';
-      document.getElementById('submitBtn').textContent = 'Guardar cambios';
-      document.getElementById('cancelBtn').classList.remove('hidden');
+            notification.textContent = message;
 
-      form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+            notificationTimer = setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 4000);
+        }
 
-    async function deleteStudent(student) {
-      if (!confirm(`¿Eliminar al estudiante ${student.name}?`)) return;
+        // Obtener todos los estudiantes: GET
+        async function loadStudents() {
+            try {
+                connectionStatus.textContent = 'Conectando...';
 
-      try {
-        await request(`${API}/${encodeURIComponent(student.name)}`, {
-          method: 'DELETE'
+                const data = await request(API);
+
+                if (!Array.isArray(data)) {
+                    throw new Error('La API no devolvió una lista válida.');
+                }
+
+                students = data;
+
+                connectionStatus.textContent = 'API conectada';
+                connectionStatus.className =
+                    'rounded-full bg-emerald-500 px-4 py-2 text-sm';
+
+                document.getElementById('totalStudents').textContent =
+                    students.length;
+
+                renderStudents();
+
+                return true;
+            } catch (error) {
+                connectionStatus.textContent = 'Sin conexión';
+                connectionStatus.className =
+                    'rounded-full bg-red-500 px-4 py-2 text-sm';
+
+                table.replaceChildren();
+
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+
+                cell.colSpan = 5;
+                cell.className = 'px-4 py-10 text-center text-red-600';
+                cell.textContent = 'No se pudo cargar la lista. Revisa el servidor.';
+
+                row.appendChild(cell);
+                table.appendChild(row);
+
+                showMessage(error.message, 'error');
+                return false;
+            }
+        }
+
+        // Mostrar estudiantes en la tabla
+        function renderStudents() {
+            const term = searchInput.value.trim().toLowerCase();
+
+            const filtered = students.filter(student =>
+                [student.name, student.course, student.language]
+                    .some(value => String(value ?? '').toLowerCase().includes(term))
+            );
+
+            table.replaceChildren();
+
+            document.getElementById('resultsCount').textContent =
+                `${filtered.length} estudiante(s) encontrado(s)`;
+
+            if (filtered.length === 0) {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+
+                cell.colSpan = 5;
+                cell.className = 'px-4 py-10 text-center text-slate-500';
+                cell.textContent = term
+                    ? 'No se encontraron coincidencias.'
+                    : 'Todavía no hay estudiantes registrados.';
+
+                row.appendChild(cell);
+                table.appendChild(row);
+                return;
+            }
+
+            filtered.forEach(student => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-slate-100 hover:bg-slate-50';
+
+                const nameCell = document.createElement('td');
+                nameCell.className = 'px-4 py-4';
+
+                const name = document.createElement('p');
+                name.className = 'font-semibold text-slate-800';
+                name.textContent = student.name;
+
+                const sex = document.createElement('p');
+                sex.className = 'mt-1 text-xs text-slate-500';
+                sex.textContent = student.sex;
+
+                nameCell.append(name, sex);
+
+                const ageCell = document.createElement('td');
+                ageCell.className = 'px-4 py-4';
+                ageCell.textContent = student.age;
+
+                const courseCell = document.createElement('td');
+                courseCell.className = 'px-4 py-4';
+                courseCell.textContent = student.course;
+
+                const languageCell = document.createElement('td');
+                languageCell.className = 'px-4 py-4';
+
+                const badge = document.createElement('span');
+                badge.className =
+                    'rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700';
+                badge.textContent = student.language;
+
+                languageCell.appendChild(badge);
+
+                const actionsCell = document.createElement('td');
+                actionsCell.className = 'px-4 py-4';
+
+                const actions = document.createElement('div');
+                actions.className = 'flex gap-2';
+
+                const editButton = document.createElement('button');
+                editButton.type = 'button';
+                editButton.textContent = 'Editar';
+                editButton.className =
+                    'rounded-md bg-amber-100 px-3 py-2 text-xs font-semibold text-amber-800 hover:bg-amber-200';
+                editButton.addEventListener('click', () => editStudent(student));
+
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.textContent = 'Eliminar';
+                deleteButton.className =
+                    'rounded-md bg-red-100 px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-200';
+                deleteButton.addEventListener('click', () => removeStudent(student.name));
+
+                actions.append(editButton, deleteButton);
+                actionsCell.appendChild(actions);
+
+                row.append(
+                    nameCell,
+                    ageCell,
+                    courseCell,
+                    languageCell,
+                    actionsCell
+                );
+
+                table.appendChild(row);
+            });
+        }
+
+        // Crear o actualizar: POST / PATCH
+        form.addEventListener('submit', async event => {
+            event.preventDefault();
+
+            if (!form.reportValidity()) return;
+
+            const name = document.getElementById('name').value.trim();
+            const ageValue = document.getElementById('age').value;
+            const course = document.getElementById('course').value.trim();
+            const sex = document.getElementById('sex').value;
+            const language = document.getElementById('language').value;
+            const age = Number(ageValue);
+
+            if (!name || !course || !sex || !language) {
+                showMessage('Completa todos los campos.', 'error');
+                return;
+            }
+
+            if (!Number.isInteger(age) || age < 1 || age > 120) {
+                showMessage('La edad debe ser un número entero entre 1 y 120.', 'error');
+                return;
+            }
+
+            const payload = { name, age, course, sex, language };
+
+            submitButton.disabled = true;
+
+            try {
+                if (editingName !== null) {
+                    // El backend identifica al estudiante por su nombre.
+                    // El nombre no se modifica durante PATCH.
+                    await request(
+                        `${API}/${encodeURIComponent(editingName)}`,
+                        {
+                            method: 'PATCH',
+                            body: JSON.stringify({ age, course, sex, language })
+                        }
+                    );
+
+                    showMessage('Estudiante actualizado correctamente.');
+                } else {
+                    await request(API, {
+                        method: 'POST',
+                        body: JSON.stringify(payload)
+                    });
+
+                    showMessage('Estudiante registrado correctamente.');
+                }
+
+                resetForm();
+                await loadStudents();
+            } catch (error) {
+                showMessage(error.message, 'error');
+            } finally {
+                submitButton.disabled = false;
+            }
         });
 
-        if (editingName === student.name) resetForm();
+        // Preparar formulario de edición
+        function editStudent(student) {
+            editingName = student.name;
 
-        showMessage('Estudiante eliminado correctamente.');
-        await loadStudents();
-      } catch (error) {
-        showMessage(error.message, true);
-      }
-    }
+            document.getElementById('name').value = student.name;
+            document.getElementById('age').value = student.age;
+            document.getElementById('course').value = student.course;
+            document.getElementById('sex').value = student.sex;
+            document.getElementById('language').value = student.language;
 
-    function resetForm() {
-      form.reset();
-      editingName = null;
-      document.getElementById('name').readOnly = false;
-      document.getElementById('formTitle').textContent =
-        '➕ Agregar estudiante';
-      document.getElementById('submitBtn').textContent = 'Agregar';
-      document.getElementById('cancelBtn').classList.add('hidden');
-    }
+            // El backend usa :name como identificador.
+            document.getElementById('name').readOnly = true;
+            document.getElementById('name').classList.add('bg-slate-100');
 
-    document.getElementById('cancelBtn').addEventListener('click', resetForm);
-    search.addEventListener('input', renderStudents);
+            document.getElementById('formTitle').textContent =
+                'Editar estudiante';
 
-    loadStudents();
-  </script>
+            submitButton.textContent = 'Guardar cambios';
+            cancelButton.classList.remove('hidden');
+
+            form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Eliminar estudiante: DELETE
+        async function removeStudent(name) {
+            const confirmed = confirm(
+                `¿Seguro que deseas eliminar a ${name}?`
+            );
+
+            if (!confirmed) return;
+
+            try {
+                await request(`${API}/${encodeURIComponent(name)}`, {
+                    method: 'DELETE'
+                });
+
+                if (editingName === name) {
+                    resetForm();
+                }
+
+                showMessage('Estudiante eliminado correctamente.');
+                await loadStudents();
+            } catch (error) {
+                showMessage(error.message, 'error');
+            }
+        }
+
+        // Restablecer formulario
+        function resetForm() {
+            form.reset();
+            editingName = null;
+
+            const nameInput = document.getElementById('name');
+            nameInput.readOnly = false;
+            nameInput.classList.remove('bg-slate-100');
+
+            document.getElementById('formTitle').textContent =
+                'Registrar estudiante';
+
+            submitButton.textContent = 'Registrar estudiante';
+            cancelButton.classList.add('hidden');
+        }
+
+        // Eventos
+        cancelButton.addEventListener('click', resetForm);
+        searchInput.addEventListener('input', renderStudents);
+
+        document.getElementById('refreshButton')
+            .addEventListener('click', loadStudents);
+
+        // Inicio
+        loadStudents();
+    </script>
 </body>
 </html>
